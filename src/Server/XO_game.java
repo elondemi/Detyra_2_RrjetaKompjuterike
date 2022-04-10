@@ -1,6 +1,7 @@
 package Server;
 
 import java.security.SecureRandom;
+import java.sql.SQLOutput;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -37,12 +38,12 @@ public class XO_game {
     }
 
 //    public void main(String[] args) {
-//        for(int i = 0; i < 3; i++) {
-//            for(int j = 0; j < 3; j++) {
-//                board[i][j] = '-';
-//            }
+//          if(checkForWinner()) {
+//                 //shfaq mesazhin e fituesit dhe dil nga while loop.
+//             sign++;
+//             System.out.println("Player " + ((sign - 1) % 2 == 1 ? "x" : "o") + " won!");
 //        }
-//        Scanner scanner = new Scanner(System.in);
+//
 //        System.out.println("The End");
 //    }
 
