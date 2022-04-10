@@ -25,9 +25,11 @@ public class Client {
                 String messageToSend = scanner.nextLine();
                 buffer = messageToSend.getBytes();
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, inetAddress, 1234);
+                byte[] response = new byte[1024];
+                DatagramPacket responsePacket = new DatagramPacket(response, response.length, inetAddress, 1234);
                 datagramSocket.send(datagramPacket);
-                datagramSocket.receive(datagramPacket);
-                String messageFromServer = new String(datagramPacket.getData(), 0, datagramPacket.getLength());
+                datagramSocket.receive(responsePacket);
+                String messageFromServer = new String(responsePacket.getData());
                 System.out.println("The server says you said: " + messageFromServer);
             } catch (IOException e){
                 e.printStackTrace();
