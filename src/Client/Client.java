@@ -18,15 +18,15 @@ public class Client {
         this.inetAddress = inetAddress;
     }
 
-    public void sendThenRecive(){
+    public void sendThenRecive(int port){
         Scanner scanner = new Scanner(System.in);
         while (true){
             try{
                 String messageToSend = scanner.nextLine();
                 buffer = messageToSend.getBytes();
-                DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, inetAddress, 1234);
+                DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length, inetAddress, port);
                 byte[] response = new byte[1024];
-                DatagramPacket responsePacket = new DatagramPacket(response, response.length, inetAddress, 1234);
+                DatagramPacket responsePacket = new DatagramPacket(response, response.length, inetAddress, port);
                 datagramSocket.send(datagramPacket);
                 datagramSocket.receive(responsePacket);
                 String messageFromServer = new String(responsePacket.getData());

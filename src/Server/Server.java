@@ -1,6 +1,7 @@
 package Server;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -8,13 +9,16 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-public class Server {
+public class Server{
     private DatagramSocket datagramSocket;
     private byte[] buffer = new byte[1024];
 
-    public static String available_commands = "/startgame - To start a new game\n" +
+    public static String available_commands = "/startgame [password] - To start a new game\n" +
             "printboard <gameId> to print board of game with specific gameId\n" +
-            "/list - to list all games\n";
+            "/list - to list all games" +
+            "/shfaqfajllat\n" +
+            "/shkruajfajllin <emri i fajllit> <permbajtja>\n" +
+            "\n";
 
     private ArrayList<XO_game> ongoing_games = new ArrayList<>();
 
@@ -39,7 +43,6 @@ public class Server {
                     client_commands = new String[1];
                     client_commands[0] = messageFromClient;
                 }
-
                 try {
                     switch (client_commands[0]) {
                         case "startgame":
@@ -63,12 +66,11 @@ public class Server {
                             int coord_y = Integer.parseInt(client_commands[4]);
                             ongoing_games.get(gameId).move(coord_x, coord_y);
                             response += ongoing_games.get(gameId).getBoard();
+                            if(ongoing_games.get(gameId).checkForWinner())
+                            {
+                                response += "Loja perfundoi, ka fituar " + (((ongoing_games.get(gameId).sign - 1) % 2 == 0) ? 'x' : 'o');
+                            }
 
-//                               if(checkForWinner()) {
-//                                 //shfaq mesazhin e fituesit dhe dil nga while loop.
-//                             sign++;
-//                             System.out.println("Player " + ((sign - 1) % 2 == 1 ? "x" : "o") + " won!");
-//                             }
                         case "printboard":
                             response = "Printing the board of game\n";
                             response += ongoing_games.get(Integer.parseInt(client_commands[1])).getBoard();
@@ -80,8 +82,12 @@ public class Server {
                             }
                             break;
                         case "shfaqfajllat":
-                            response = "Duke i shfaqur fajllat";
-                            ListoFajllat();
+                            response = "Duke i shfaqur fajllat" + ListoFajllat();
+                            break;
+                        case "shkruajfajllin":
+                            shkruajFajllin(client_commands[1], client_commands[2]);
+                            response = "Fajlli u shkruajt";
+                            break;
                     }
 //                buffer = response.getBytes();
                 } catch (Exception ex) {
@@ -101,15 +107,23 @@ public class Server {
         }
     }
 
-    void ListoFajllat() {    // creates a file object
+     String ListoFajllat() {    // creates a file object
         File file = new File("C:\\Users\\elond\\IdeaProjects\\Detyra_2_RrjetaKompjuterike");
 
         // returns an array of all files
         String[] fileList = file.list();
-
-        for (String str : fileList) {
-            System.out.println(str);
+        String rezultat ="";//hajde pe rujme qetu :P
+      for (String str : fileList) {
+//            for(int i = 0; i < fileList.length; i++){
+//                String str = fileList[i];
+            rezultat += str + "\n";
         }
+         return rezultat;
+     }
 
-    }
+     void shkruajFajllin(String emriFajllit, String permbajtja ) throws IOException {
+     FileWriter fw = new FileWriter("C:\\Users\\elond\\IdeaProjects\\Detyra_2_RrjetaKompjuterike\\" + emriFajllit);
+     fw.write(permbajtja);
+     fw.close();
+     }
 }
